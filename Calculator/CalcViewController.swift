@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  CalcViewController.swift
 //  Calculator
 //
 //  Created by Andrij Trubchanin on 12/12/16.
@@ -8,22 +8,39 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class CalcViewController: UIViewController {
     
     @IBOutlet private weak var display: UILabel!
     
-    private var isInTheMiddleOfTheTyping = false
+    private var isInTheMiddleOfTheTyping = false {
+        willSet {
+            if !newValue { isDotPresent = false }
+        }
+    }
+    private var isDotPresent = false
     
     override func viewDidLoad() {
         display.layer.borderWidth = 1.0
     }
     
     @IBAction private func touchDigit(_ sender: UIButton) {
-        let digit = sender.currentTitle!
-        if isInTheMiddleOfTheTyping {
+        var digit = sender.currentTitle!
+        if isInTheMiddleOfTheTyping && display.text! != "0"{
+            // ignore if dot touched and dot is already present
+            if digit == "." {
+                digit = isDotPresent ? "" : digit
+                isDotPresent = true
+            }
             display.text = display.text!+digit
         } else {
-            display.text = digit
+            // add zero if dot is the first digit
+            if digit=="." {
+                display.text = "0."
+                isDotPresent = true
+            }
+            else {
+                display.text = digit
+            }
         }
         isInTheMiddleOfTheTyping = true
     }
