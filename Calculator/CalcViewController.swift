@@ -14,6 +14,7 @@ class CalcViewController: UIViewController {
     
     private var isInTheMiddleOfTheTyping = false {
         willSet {
+            // reset dot when reseting typing
             if !newValue { isDotPresent = false }
         }
     }
@@ -67,6 +68,16 @@ class CalcViewController: UIViewController {
             brain.program = savedProgram!
             displayValue = brain.result
         }
+    }
+    
+    @IBAction func backspace(_ sender: UIButton) {
+        var text = display.text!
+        let delChar = text.remove(at: text.index(before: text.endIndex))
+        if delChar == "." {
+            isDotPresent = false
+        }
+        if text.isEmpty || text == "-" { text = "0" }
+        display.text = text
     }
     
     @IBAction private func performOperation(_ sender: UIButton) {

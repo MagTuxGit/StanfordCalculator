@@ -8,9 +8,17 @@
 
 import Foundation
 
+/*
 func multiply(op1: Double, op2: Double) -> Double {
     return op1 * op2
 }
+
+func removeLastChar(value: Double) -> Double {
+    var valStr = String(value)
+    valStr.remove(at: valStr.index(before: valStr.endIndex))
+    return Double(valStr)!
+}
+*/
 
 class CalcBrains {
     private var accumulator = 0.0
@@ -26,7 +34,12 @@ class CalcBrains {
         "e" : Operation.Constant(M_E),
         "√" : Operation.UnaryOp(sqrt),
         "cos" : Operation.UnaryOp(cos),
-        "±" : Operation.UnaryOp({ -$0 }),
+        "sin" : Operation.UnaryOp(sin),
+        "tan" : Operation.UnaryOp(tan),
+        "ln" : Operation.UnaryOp(log),
+        "+/-" : Operation.UnaryOp({ -$0 }),
+        "1/x" : Operation.UnaryOp({ 1/$0 }),
+        //"←" : Operation.UnaryOp(removeLastChar),
         //"×" : Operation.BinaryOp(multiply),
         "×" : Operation.BinaryOp({ $0 * $1 }),
         "÷" : Operation.BinaryOp({ $0 / $1 }),
@@ -73,7 +86,6 @@ class CalcBrains {
             self.pending = nil
         }
     }
-
     
     private var pending: PendingBinaryOperationInfo?
     
