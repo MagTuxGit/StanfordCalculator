@@ -6,4 +6,4 @@ Done
 * [Programming Project 1: Calculator](https://itunes.apple.com/ua/course/programming-project-1-calculator/id1104579961?i=1000367795521&mt=2)
 * [Programming Project 2: Calculator Brain](https://itunes.apple.com/ua/course/programming-project-2-calculator/id1104579961?i=1000367941540&mt=2)
 
-![Calculator](magtuxgit.github.com/StanfordCalculator/ScreenShot.png)
+![Calculator](ScreenShot.png)
