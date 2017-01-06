@@ -41,7 +41,10 @@ class CalcViewController: UIViewController {
     
     private var displayValue: Double {
         get {
-            return Double(display.text!)!
+            if let dValue = Double(display.text!) {
+                return dValue
+            }
+            return 0
         }
         set {
             let formatter = NumberFormatter()
