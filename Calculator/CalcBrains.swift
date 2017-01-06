@@ -51,7 +51,8 @@ class CalcBrains {
         "÷" : Operation.BinaryOp({ $0 / $1 }),
         "+" : Operation.BinaryOp({ $0 + $1 }),
         "−" : Operation.BinaryOp({ $0 - $1 }),
-        "=" : Operation.Equals
+        "=" : Operation.Equals,
+        "rand": Operation.Random({ Double(arc4random()) / Double(UINT32_MAX) })
     ]
         
     private enum Operation {
@@ -59,6 +60,7 @@ class CalcBrains {
         case UnaryOp((Double) -> Double)
         case BinaryOp((Double,Double) -> Double)
         case Equals
+        case Random(() -> Double)
     }
     
     func getNumberForDescription(_ number: Double) -> String {
@@ -138,6 +140,8 @@ class CalcBrains {
             case .Equals :
                 executePendingBinaryOperation()
                 addEqualsToDescription()
+            case .Random(let random) :
+                accumulator = random()
             }
         }
     }
