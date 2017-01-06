@@ -61,10 +61,21 @@ class CalcBrains {
         case Equals
     }
     
+    func getNumberForDescription(_ number: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 6
+        formatter.minimumIntegerDigits = 1
+        if let strNumber=formatter.string(from: NSNumber(value: number)) {
+            return strNumber
+        }
+        return "0"
+    }
+    
     func addBinaryToDescription(_ symbol: String) {
         // "1+"  - lastOp is empty, descr is empty, use acc "1" as lastOp
         // "1++" - descr = "1+", lastOp is empty, isPart true, use acc "1" as lastOp (result is 1+1+)
-        if lastOperand.isEmpty && (isPartialResult || description.isEmpty) { lastOperand = String(accumulator) }
+        if lastOperand.isEmpty && (isPartialResult || description.isEmpty) { lastOperand = getNumberForDescription(accumulator) }
         // fix lastop and symbol
         description += lastOperand + symbol
         lastOperand = ""
@@ -81,14 +92,14 @@ class CalcBrains {
         
         if isPartialResult {
             // "1+2√" - descr = "1+", lastop is empty, use acc "2" as lastop
-            if lastOperand.isEmpty { lastOperand = String(accumulator) }
+            if lastOperand.isEmpty { lastOperand = getNumberForDescription(accumulator) }
             // wrap lastop into operation and save to lastop
             lastOperand = symbolEdited + "(" + lastOperand + ")"
         } else {
             // "2√" - lastop is empty, descr is empty, use acc "2" as lastop
             // "1+2=√" - lastop is empty, use descr "1+2" as lastop, result is "√(1+2)"
             // here lastop is always empty
-            if lastOperand.isEmpty { lastOperand = (description.isEmpty ? String(accumulator) : description) }
+            if lastOperand.isEmpty { lastOperand = (description.isEmpty ? getNumberForDescription(accumulator) : description) }
             // wrap lastop into operation and fix result
             description = symbolEdited + "(" + lastOperand + ")"
             lastOperand = ""
@@ -134,7 +145,7 @@ class CalcBrains {
     private func executePendingBinaryOperation() {
         if pending != nil {
             // "1+2=", lastop is empty, descr = "1+", use acc "2" as lastop
-            if lastOperand.isEmpty { lastOperand = String(accumulator) }
+            if lastOperand.isEmpty { lastOperand = getNumberForDescription(accumulator) }
             self.accumulator = self.pending!.binaryFunction(self.pending!.firstOperand, self.accumulator)
             self.pending = nil
         }

@@ -44,7 +44,11 @@ class CalcViewController: UIViewController {
             return Double(display.text!)!
         }
         set {
-            display.text = String(newValue)
+            let formatter = NumberFormatter()
+            formatter.minimumFractionDigits = 0
+            formatter.maximumFractionDigits = 6
+            formatter.minimumIntegerDigits = 1
+            display.text = formatter.string(from: NSNumber(value: newValue))
         }
     }
     
