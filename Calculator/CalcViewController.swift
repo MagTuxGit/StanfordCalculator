@@ -11,6 +11,7 @@ import UIKit
 class CalcViewController: UIViewController {
     
     @IBOutlet private weak var display: UILabel!
+    @IBOutlet weak var history: UILabel!
     
     private var isInTheMiddleOfTheTyping = false {
         willSet {
@@ -18,6 +19,7 @@ class CalcViewController: UIViewController {
             if !newValue { isDotPresent = false }
         }
     }
+    
     private var isDotPresent = false
     
     override func viewDidLoad() {
@@ -25,6 +27,11 @@ class CalcViewController: UIViewController {
     }
     
     @IBAction private func touchDigit(_ sender: UIButton) {
+        // clear state when new expression starts
+        if !brain.isPartialResult && !isInTheMiddleOfTheTyping {
+            brain.clear()
+            history.text = "..."
+        }
         var digit = sender.currentTitle!
         if isInTheMiddleOfTheTyping && display.text! != "0"{
             // ignore if dot touched and dot is already present
@@ -71,6 +78,7 @@ class CalcViewController: UIViewController {
     }
     
     @IBAction func backspace(_ sender: UIButton) {
+        if !isInTheMiddleOfTheTyping { return }     // don't use backspace on results or constants
         var text = display.text!
         let delChar = text.remove(at: text.index(before: text.endIndex))
         if delChar == "." {
@@ -78,6 +86,13 @@ class CalcViewController: UIViewController {
         }
         if text.isEmpty || text == "-" { text = "0" }
         display.text = text
+    }
+    
+    @IBAction func clear(_ sender: UIButton) {
+        display.text = "0"
+        history.text = "..."
+        isInTheMiddleOfTheTyping = false    // isDotPresent = false automatically
+        brain.clear()
     }
     
     @IBAction private func performOperation(_ sender: UIButton) {
@@ -96,5 +111,6 @@ class CalcViewController: UIViewController {
              }
              */
         }
+        history.text = brain.description + brain.lastOperand + (brain.isPartialResult || brain.description.isEmpty ? "..." : "=")
     }
 }

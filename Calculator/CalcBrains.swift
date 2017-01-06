@@ -24,6 +24,12 @@ class CalcBrains {
     private var accumulator = 0.0
     private var internalProgram = [Any]()
     
+    var description = ""    // fixed part
+    var lastOperand = ""    // last operand for unary operators wrapping
+    var isPartialResult: Bool {
+        return pending != nil
+    }
+    
     func setOperand (operand : Double) {
         accumulator = operand
         internalProgram.append(operand)
@@ -55,6 +61,46 @@ class CalcBrains {
         case Equals
     }
     
+    func addBinaryToDescription(_ symbol: String) {
+        // "1+"  - lastOp is empty, descr is empty, use acc "1" as lastOp
+        // "1++" - descr = "1+", lastOp is empty, isPart true, use acc "1" as lastOp (result is 1+1+)
+        if lastOperand.isEmpty && (isPartialResult || description.isEmpty) { lastOperand = String(accumulator) }
+        // fix lastop and symbol
+        description += lastOperand + symbol
+        lastOperand = ""
+    }
+    
+    func addUnaryToDescription(_ symbol: String) {
+        // prepare symbols for output
+        var symbolEdited = symbol
+        switch symbol {
+        case "+/-": symbolEdited = "-"
+        case "1/x": symbolEdited = "1/"
+        default: break
+        }
+        
+        if isPartialResult {
+            // "1+2√" - descr = "1+", lastop is empty, use acc "2" as lastop
+            if lastOperand.isEmpty { lastOperand = String(accumulator) }
+            // wrap lastop into operation and save to lastop
+            lastOperand = symbolEdited + "(" + lastOperand + ")"
+        } else {
+            // "2√" - lastop is empty, descr is empty, use acc "2" as lastop
+            // "1+2=√" - lastop is empty, use descr "1+2" as lastop, result is "√(1+2)"
+            // here lastop is always empty
+            if lastOperand.isEmpty { lastOperand = (description.isEmpty ? String(accumulator) : description) }
+            // wrap lastop into operation and fix result
+            description = symbolEdited + "(" + lastOperand + ")"
+            lastOperand = ""
+        }
+    }
+    
+    func addEqualsToDescription() {
+        // fix lastop
+        description += lastOperand
+        lastOperand = ""
+    }
+    
     func performOperation (symbol: String) {
         /*
         switch symbol {
@@ -68,20 +114,27 @@ class CalcBrains {
         if let operation = operations[symbol] {
             switch operation {
             case .Constant(let value) :
+                if !isPartialResult { clear() }     // clear state when new expression starts
+                lastOperand = symbol               // use symbol as lastop
                 accumulator = value
             case .UnaryOp(let function) :
+                addUnaryToDescription(symbol)
                 accumulator = function(accumulator)
             case .BinaryOp(let function) :
                 executePendingBinaryOperation()
+                addBinaryToDescription(symbol)
                 pending = PendingBinaryOperationInfo(binaryFunction: function, firstOperand: accumulator)
             case .Equals :
                 executePendingBinaryOperation()
+                addEqualsToDescription()
             }
         }
     }
     
     private func executePendingBinaryOperation() {
         if pending != nil {
+            // "1+2=", lastop is empty, descr = "1+", use acc "2" as lastop
+            if lastOperand.isEmpty { lastOperand = String(accumulator) }
             self.accumulator = self.pending!.binaryFunction(self.pending!.firstOperand, self.accumulator)
             self.pending = nil
         }
@@ -118,6 +171,8 @@ class CalcBrains {
         accumulator = 0.0
         pending = nil
         internalProgram.removeAll()
+        description = ""
+        lastOperand = ""
     }
     
     var result: Double {
