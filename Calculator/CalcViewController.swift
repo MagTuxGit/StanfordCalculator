@@ -13,14 +13,7 @@ class CalcViewController: UIViewController {
     @IBOutlet private weak var display: UILabel!
     @IBOutlet weak var history: UILabel!
     
-    private var isInTheMiddleOfTheTyping = false {
-        willSet {
-            // reset dot when reseting typing
-            if !newValue { isDotPresent = false }
-        }
-    }
-    
-    private var isDotPresent = false
+    private var isInTheMiddleOfTheTyping = false
     
     override func viewDidLoad() {
         display.layer.borderWidth = 1.0
@@ -32,23 +25,16 @@ class CalcViewController: UIViewController {
             brain.clear()
             history.text = "..."
         }
-        var digit = sender.currentTitle!
-        if isInTheMiddleOfTheTyping && display.text! != "0"{
+
+        let digit = sender.currentTitle!
+
+        if isInTheMiddleOfTheTyping && display.text! != "0" {
             // ignore if dot touched and dot is already present
-            if digit == "." {
-                digit = isDotPresent ? "" : digit
-                isDotPresent = true
+            if (digit != ".") || (display.text!.range(of: ".")==nil) {
+                display.text = display.text!+digit
             }
-            display.text = display.text!+digit
         } else {
-            // add zero if dot is the first digit
-            if digit=="." {
-                display.text = "0."
-                isDotPresent = true
-            }
-            else {
-                display.text = digit
-            }
+            display.text = (digit == ".") ? "0." : digit
         }
         isInTheMiddleOfTheTyping = true
     }
@@ -80,18 +66,15 @@ class CalcViewController: UIViewController {
     @IBAction func backspace(_ sender: UIButton) {
         if !isInTheMiddleOfTheTyping { return }     // don't use backspace on results or constants
         var text = display.text!
-        let delChar = text.remove(at: text.index(before: text.endIndex))
-        if delChar == "." {
-            isDotPresent = false
-        }
-        if text.isEmpty || text == "-" { text = "0" }
+        text.remove(at: text.index(before: text.endIndex))
+        if text.isEmpty || (text == "-") { text = "0" }
         display.text = text
     }
     
     @IBAction func clear(_ sender: UIButton) {
         display.text = "0"
         history.text = "..."
-        isInTheMiddleOfTheTyping = false    // isDotPresent = false automatically
+        isInTheMiddleOfTheTyping = false
         brain.clear()
     }
     
