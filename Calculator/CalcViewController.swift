@@ -12,11 +12,18 @@ class CalcViewController: UIViewController {
     
     @IBOutlet private weak var display: UILabel!
     @IBOutlet weak var history: UILabel!
+
+    @IBOutlet weak var btnRand: UIButton!
+    @IBOutlet weak var btnRest: UIButton!
+    @IBOutlet weak var btnSave: UIButton!
     
     private var isInTheMiddleOfTheTyping = false
     
     override func viewDidLoad() {
         display.layer.borderWidth = 1.0
+        btnRand.titleLabel!.adjustsFontSizeToFitWidth = true
+        btnRest.titleLabel!.adjustsFontSizeToFitWidth = true
+        btnSave.titleLabel!.adjustsFontSizeToFitWidth = true
     }
     
     @IBAction private func touchDigit(_ sender: UIButton) {

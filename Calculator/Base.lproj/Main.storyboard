@@ -70,7 +70,7 @@
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8O9-79-jy3">
                                                         <rect key="frame" x="141" y="0.0" width="61" height="79"/>
                                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="31"/>
                                                         <state key="normal" title="rand">
                                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </state>
@@ -81,7 +81,7 @@
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cjm-p9-cT3">
                                                         <rect key="frame" x="212" y="0.0" width="60.5" height="79"/>
                                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="31"/>
                                                         <state key="normal" title="rest">
                                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </state>
@@ -92,7 +92,7 @@
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O4Q-dB-Sm6">
                                                         <rect key="frame" x="282.5" y="0.0" width="60.5" height="79"/>
                                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="31"/>
                                                         <state key="normal" title="save">
                                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </state>
@@ -416,6 +416,9 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="btnRand" destination="8O9-79-jy3" id="e1b-i3-Wdw"/>
+                        <outlet property="btnRest" destination="cjm-p9-cT3" id="Eeh-v0-784"/>
+                        <outlet property="btnSave" destination="O4Q-dB-Sm6" id="YgM-Ab-4qR"/>
                         <outlet property="display" destination="Ben-zZ-fjt" id="BTz-3v-Tz6"/>
                         <outlet property="history" destination="EQe-f1-Yil" id="XUw-vH-mgE"/>
                     </connections>
