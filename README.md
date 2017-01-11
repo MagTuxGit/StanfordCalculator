@@ -4,6 +4,6 @@ Project from course [Developing iOS 9 Apps with Swift](https://itunes.apple.com/
 
 Done
 * [Programming Project 1: Calculator](https://itunes.apple.com/ua/course/programming-project-1-calculator/id1104579961?i=1000367795521&mt=2)
-* [Programming Project 2: Calculator Brain](https://itunes.apple.com/ua/course/programming-project-2-calculator/id1104579961?i=1000367941540&mt=2)
+* [Programming Project 2: Calculator Brain](https://itunes.apple.com/ua/course/programming-project-2-calculator/id1104579961?i=1000367941540&mt=2) (in progress)
 
 ![Calculator](ScreenShot.png)
