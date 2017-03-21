@@ -5,153 +5,107 @@
 //  Created by Andrij Trubchanin on 12/13/16.
 //  Copyright © 2016 Andrij Trubchanin. All rights reserved.
 //
+// description implementation was taken here https://github.com/m2mtech/calculator-2016
 
 import Foundation
 
-/*
-func multiply(op1: Double, op2: Double) -> Double {
-    return op1 * op2
+// just in case, not used
+func factorial(_ op1: Double) -> Double {
+    if (op1 <= 1) {
+        return 1
+    }
+    return op1 * factorial(op1 - 1.0)
 }
-
-func removeLastChar(value: Double) -> Double {
-    var valStr = String(value)
-    valStr.remove(at: valStr.index(before: valStr.endIndex))
-    return Double(valStr)!
-}
-*/
 
 class CalcBrains {
+    // MARK: Operation section
     private var accumulator = 0.0
-    private var internalProgram = [Any]()
     
-    var description = ""    // fixed part
-    var lastOperand = ""    // last operand for unary operators wrapping
-    var isPartialResult: Bool {
-        return pending != nil
-    }
-    
+    let formatter = DefaultNumberFormatter()
+
     func setOperand (operand : Double) {
         accumulator = operand
+        // desc acc can be a symbol of a constant
+        if descriptionAccumulator == " " {
+            descriptionAccumulator = formatter.string(from: NSNumber(value: accumulator)) ?? ""
+        }
         internalProgram.append(operand)
     }
     
     private var operations: Dictionary<String,Operation> = [
         "π" : Operation.Constant(M_PI),
         "e" : Operation.Constant(M_E),
-        "√" : Operation.UnaryOp(sqrt),
-        "cos" : Operation.UnaryOp(cos),
-        "sin" : Operation.UnaryOp(sin),
-        "tan" : Operation.UnaryOp(tan),
-        "ln" : Operation.UnaryOp(log),
-        "+/-" : Operation.UnaryOp({ -$0 }),
-        "1/x" : Operation.UnaryOp({ 1/$0 }),
-        //"←" : Operation.UnaryOp(removeLastChar),
+        "√" : Operation.UnaryOp(sqrt, { "√(" + $0 + ")" }),
+        "cos" : Operation.UnaryOp(cos, { "cos(" + $0 + ")" }),
+        "sin" : Operation.UnaryOp(sin, { "sin(" + $0 + ")" }),
+        "tan" : Operation.UnaryOp(tan, { "tan(" + $0 + ")" }),
+        "ln" : Operation.UnaryOp(log, { "ln(" + $0 + ")" }),
+        "+/-" : Operation.UnaryOp({ -$0 },{ "-(" + $0 + ")" }),
+        "x⁻¹" : Operation.UnaryOp({ 1.0/$0 }, { "1/(" + $0 + ")" }),
+        "x²" : Operation.UnaryOp({ $0*$0 }, { "(" + $0 + ")²" }),
+        "eˣ" : Operation.UnaryOp({ pow(M_E, $0) }, { "e^" + $0 }),
         //"×" : Operation.BinaryOp(multiply),
-        "×" : Operation.BinaryOp({ $0 * $1 }),
-        "÷" : Operation.BinaryOp({ $0 / $1 }),
-        "+" : Operation.BinaryOp({ $0 + $1 }),
-        "−" : Operation.BinaryOp({ $0 - $1 }),
+        //"×" : Operation.BinaryOp({ $0 * $1 }),
+        //"÷" : Operation.BinaryOp({ $0 / $1 }),
+        //"+" : Operation.BinaryOp({ $0 + $1 }),
+        //"−" : Operation.BinaryOp({ $0 - $1 }),
+        "×" : Operation.BinaryOp(*, { $0 + " × " + $1 }, 1),
+        "÷" : Operation.BinaryOp(/, { $0 + " ÷ " + $1 }, 1),
+        "+" : Operation.BinaryOp(+, { $0 + " + " + $1 }, 0),
+        "−" : Operation.BinaryOp(-, { $0 + " - " + $1 }, 0),
+        "xʸ": Operation.BinaryOp(pow, { $0 + " ^ " + $1 }, 2),
         "=" : Operation.Equals,
-        "rand": Operation.Random({ Double(arc4random()) / Double(UINT32_MAX) })
+        "Rand": Operation.Random({ Double(arc4random()) / Double(UINT32_MAX) }),
+        // not used
+        "asin" : Operation.UnaryOp(asin, { "asin(" + $0 + ")"}),
+        "acos" : Operation.UnaryOp(acos, { "acos(" + $0 + ")"}),
+        "atan" : Operation.UnaryOp(atan, { "atan(" + $0 + ")"})
     ]
         
     private enum Operation {
         case Constant(Double)
-        case UnaryOp((Double) -> Double)
-        case BinaryOp((Double,Double) -> Double)
+        case UnaryOp((Double) -> Double, (String) -> String)
+        case BinaryOp((Double,Double) -> Double, (String,String) -> String, Int)
         case Equals
         case Random(() -> Double)
     }
     
-    func getNumberForDescription(_ number: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 6
-        formatter.minimumIntegerDigits = 1
-        if let strNumber=formatter.string(from: NSNumber(value: number)) {
-            return strNumber
-        }
-        return "0"
-    }
-    
-    func addBinaryToDescription(_ symbol: String) {
-        // "1+"  - lastOp is empty, descr is empty, use acc "1" as lastOp
-        // "1++" - descr = "1+", lastOp is empty, isPart true, use acc "1" as lastOp (result is 1+1+)
-        if lastOperand.isEmpty && (isPartialResult || description.isEmpty) { lastOperand = getNumberForDescription(accumulator) }
-        // fix lastop and symbol
-        description += lastOperand + symbol
-        lastOperand = ""
-    }
-    
-    func addUnaryToDescription(_ symbol: String) {
-        // prepare symbols for output
-        var symbolEdited = symbol
-        switch symbol {
-        case "+/-": symbolEdited = "-"
-        case "1/x": symbolEdited = "1/"
-        default: break
-        }
-        
-        if isPartialResult {
-            // "1+2√" - descr = "1+", lastop is empty, use acc "2" as lastop
-            if lastOperand.isEmpty { lastOperand = getNumberForDescription(accumulator) }
-            // wrap lastop into operation and save to lastop
-            lastOperand = symbolEdited + "(" + lastOperand + ")"
-        } else {
-            // "2√" - lastop is empty, descr is empty, use acc "2" as lastop
-            // "1+2=√" - lastop is empty, use descr "1+2" as lastop, result is "√(1+2)"
-            // here lastop is always empty
-            if lastOperand.isEmpty { lastOperand = (description.isEmpty ? getNumberForDescription(accumulator) : description) }
-            // wrap lastop into operation and fix result
-            description = symbolEdited + "(" + lastOperand + ")"
-            lastOperand = ""
-        }
-    }
-    
-    func addEqualsToDescription() {
-        // fix lastop
-        description += lastOperand
-        lastOperand = ""
-    }
-    
     func performOperation (symbol: String) {
-        /*
-        switch symbol {
-        case "π" : accumulator = M_PI
-        case "√" : accumulator = sqrt(accumulator)
-        default : break
-        }
-        */
         internalProgram.append(symbol)
         
         if let operation = operations[symbol] {
             switch operation {
             case .Constant(let value) :
-                if !isPartialResult { clear() }     // clear state when new expression starts
-                lastOperand = symbol               // use symbol as lastop
+                //if !isPartialResult { clear() }     // clear state when new expression starts
                 accumulator = value
-            case .UnaryOp(let function) :
-                addUnaryToDescription(symbol)
+                descriptionAccumulator = symbol
+            case .UnaryOp(let function, let descriptionFunction) :
                 accumulator = function(accumulator)
-            case .BinaryOp(let function) :
+                descriptionAccumulator = descriptionFunction(descriptionAccumulator)
+            case .BinaryOp(let function, let descriptionFunction, let precedence) :
                 executePendingBinaryOperation()
-                addBinaryToDescription(symbol)
-                pending = PendingBinaryOperationInfo(binaryFunction: function, firstOperand: accumulator)
+                if currentPrecedence < precedence {
+                    descriptionAccumulator = "(" + descriptionAccumulator + ")"
+                }
+                currentPrecedence = precedence
+                pending = PendingBinaryOperationInfo(binaryFunction: function, firstOperand: accumulator,
+                                                   descriptionFunction: descriptionFunction, descriptionOperand: descriptionAccumulator)
+                // desc acc should contain last operand only
+                descriptionAccumulator = " "
             case .Equals :
                 executePendingBinaryOperation()
-                addEqualsToDescription()
             case .Random(let random) :
                 accumulator = random()
+                descriptionAccumulator = "rand()"
             }
         }
     }
     
     private func executePendingBinaryOperation() {
         if pending != nil {
-            // "1+2=", lastop is empty, descr = "1+", use acc "2" as lastop
-            if lastOperand.isEmpty { lastOperand = getNumberForDescription(accumulator) }
-            self.accumulator = self.pending!.binaryFunction(self.pending!.firstOperand, self.accumulator)
-            self.pending = nil
+            accumulator = pending!.binaryFunction(pending!.firstOperand, accumulator)
+            descriptionAccumulator = pending!.descriptionFunction(pending!.descriptionOperand, descriptionAccumulator)
+            pending = nil
         }
     }
     
@@ -160,8 +114,37 @@ class CalcBrains {
     private struct PendingBinaryOperationInfo {
         var binaryFunction: (Double,Double) -> Double
         var firstOperand: Double
+        var descriptionFunction: (String, String) -> String
+        var descriptionOperand: String
     }
     
+    func clear() {
+        accumulator = 0.0
+        pending = nil
+        internalProgram.removeAll()
+        descriptionAccumulator = " "
+        currentPrecedence = Int.max
+    }
+    
+    var result: Double {
+        get {
+            return accumulator
+        }
+    }
+    
+    // MARK: Variables section
+    var variableNames: Dictionary<String, Double> = [:]
+    
+    func setOperand(variableName: String) {
+        if let variableValue = variableNames[variableName] {
+            setOperand(operand: variableValue)
+        } else {
+            setOperand(operand: 0.0)
+        }
+    }
+    
+    // MARK: Program section
+    private var internalProgram = [Any]()
     typealias PropertyList = Any    // AnyObject doesn't work
     
     var program: PropertyList {
@@ -182,18 +165,34 @@ class CalcBrains {
         }
     }
 
-    func clear() {
-        accumulator = 0.0
-        pending = nil
-        internalProgram.removeAll()
-        description = ""
-        lastOperand = ""
-    }
-    
-    var result: Double {
-        get {
-            return accumulator
+    // MARK: Description section
+    private var currentPrecedence = Int.max
+    private var descriptionAccumulator = "0" {
+        didSet {
+            if pending == nil {
+                currentPrecedence = Int.max
+            }
         }
     }
+
+    var description: String {
+        get {
+            if pending == nil {
+                return descriptionAccumulator
+            } else {
+                return pending!.descriptionFunction(pending!.descriptionOperand,
+                                                    pending!.descriptionOperand != descriptionAccumulator ? descriptionAccumulator : "")
+            }
+        }
+    }
+    var isPartialResult: Bool {
+        return pending != nil
+    }
     
+    private func getNumberForDescription(_ number: Double) -> String {
+        if let strNumber=formatter.string(from: NSNumber(value: number)) {
+            return strNumber
+        }
+        return "0"
+    }
 }

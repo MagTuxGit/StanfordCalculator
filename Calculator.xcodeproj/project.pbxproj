@@ -13,6 +13,7 @@
 		8791F8B11DFEDCDD00BEDFD0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8791F8B01DFEDCDD00BEDFD0 /* Assets.xcassets */; };
 		8791F8B41DFEDCDD00BEDFD0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8791F8B21DFEDCDD00BEDFD0 /* LaunchScreen.storyboard */; };
 		8791F8BD1DFFE5BB00BEDFD0 /* CalcBrains.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8791F8BC1DFFE5BB00BEDFD0 /* CalcBrains.swift */; };
+		87FC36C51E24EB080084C012 /* DefaultNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87FC36C41E24EB080084C012 /* DefaultNumberFormatter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		8791F8B31DFEDCDD00BEDFD0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8791F8B51DFEDCDD00BEDFD0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8791F8BC1DFFE5BB00BEDFD0 /* CalcBrains.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalcBrains.swift; sourceTree = "<group>"; };
+		87FC36C41E24EB080084C012 /* DefaultNumberFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultNumberFormatter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 				8791F8AB1DFEDCDD00BEDFD0 /* CalcViewController.swift */,
 				8791F8AD1DFEDCDD00BEDFD0 /* Main.storyboard */,
 				8791F8BC1DFFE5BB00BEDFD0 /* CalcBrains.swift */,
+				87FC36C41E24EB080084C012 /* DefaultNumberFormatter.swift */,
 			);
 			path = Calculator;
 			sourceTree = "<group>";
@@ -149,6 +152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8791F8BD1DFFE5BB00BEDFD0 /* CalcBrains.swift in Sources */,
+				87FC36C51E24EB080084C012 /* DefaultNumberFormatter.swift in Sources */,
 				8791F8AC1DFEDCDD00BEDFD0 /* CalcViewController.swift in Sources */,
 				8791F8AA1DFEDCDD00BEDFD0 /* AppDelegate.swift in Sources */,
 			);
