@@ -66,11 +66,13 @@ class CalcViewController: UIViewController {
     private var savedProgram: CalcBrains.PropertyList?
     
     @IBAction private func performOperation(_ sender: UIButton) {
-        brain.setOperand(operand: displayValue)
+        brain.setOperand(displayValue)
         isInTheMiddleOfTheTyping = false
         if let operationSymbol = sender.currentTitle {
-            brain.performOperation(symbol: operationSymbol)
-            displayValue = brain.result
+            brain.performOperation(operationSymbol)
+            if let result = brain.result {
+                displayValue = result
+            }
 
             /*
              if operationSymbol=="π" {
@@ -96,7 +98,9 @@ class CalcViewController: UIViewController {
     @IBAction private func restore() {
         if savedProgram != nil {
             brain.program = savedProgram!
-            displayValue = brain.result
+            if let result = brain.result {
+                displayValue = result
+            }
         }
     }
     
