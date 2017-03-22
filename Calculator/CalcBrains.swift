@@ -185,14 +185,15 @@ class CalcBrains {
             }
         }
     }
+
     var isPartialResult: Bool {
         return pending != nil
     }
     
-    private func getNumberForDescription(_ number: Double) -> String {
-        if let strNumber=formatter.string(from: NSNumber(value: number)) {
-            return strNumber
-        }
-        return "0"
-    }
+//    private func getNumberForDescription(_ number: Double) -> String {
+//        if let strNumber=formatter.string(from: NSNumber(value: number)) {
+//            return strNumber
+//        }
+//        return "0"
+//    }
 }
