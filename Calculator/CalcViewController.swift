@@ -31,7 +31,7 @@ class CalcViewController: UIViewController {
     
     @IBAction private func touchDigit(_ sender: UIButton) {
         // clear state when new expression starts
-        if !brain.isPartialResult && !isInTheMiddleOfTheTyping {
+        if !brain.resultIsPending && !isInTheMiddleOfTheTyping {
             brain.clear()
             history.text = "..."
         }
@@ -87,7 +87,7 @@ class CalcViewController: UIViewController {
     }
     
     private func setHistory() {
-        history.text = brain.description + (brain.isPartialResult || brain.description.isEmpty ? "..." : "=")
+        history.text = brain.description + (brain.resultIsPending || brain.description.isEmpty ? "..." : "=")
     }
     
     // MARK: Additional buttons actions

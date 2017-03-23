@@ -78,7 +78,7 @@ struct CalcBrains {
         if let operation = operations[symbol] {
             switch operation {
             case .constant(let value) :
-                //if !isPartialResult { clear() }     // clear state when new expression starts
+                //if !resultIsPending { clear() }     // clear state when new expression starts
                 accumulator = value
                 descriptionAccumulator = symbol
             case .unaryOperation(let function, let descriptionFunction) :
@@ -207,7 +207,7 @@ struct CalcBrains {
         }
     }
 
-    var isPartialResult: Bool {
+    var resultIsPending: Bool {
         return pendingBinaryOperation != nil
     }
     
