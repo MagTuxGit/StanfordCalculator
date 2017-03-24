@@ -40,7 +40,7 @@ class CalcViewController: UIViewController {
 
         if isInTheMiddleOfTheTyping && display.text! != "0" {
             // ignore if dot touched and dot is already present
-            if (digit != ".") || (display.text!.range(of: ".")==nil) {
+            if (digit != ".") || (!display.text!.contains(".")) {
                 display.text = display.text!+digit
             }
         } else {

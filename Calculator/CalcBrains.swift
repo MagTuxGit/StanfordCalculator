@@ -48,9 +48,6 @@ struct CalcBrains {
         "eˣ" :  .unaryOperation({ pow(M_E, $0) }, { "e^" + $0 }),
         //"×" : .binaryOp(multiply),
         //"×" : .binaryOp({ $0 * $1 }),
-        //"÷" : .binaryOp({ $0 / $1 }),
-        //"+" : .binaryOp({ $0 + $1 }),
-        //"−" : .binaryOp({ $0 - $1 }),
         "×" :   .binaryOperation(*, { $0 + " × " + $1 }, 1),
         "÷" :   .binaryOperation(/, { $0 + " ÷ " + $1 }, 1),
         "+" :   .binaryOperation(+, { $0 + " + " + $1 }, 0),
@@ -210,11 +207,4 @@ struct CalcBrains {
     var resultIsPending: Bool {
         return pendingBinaryOperation != nil
     }
-    
-//    private func getNumberForDescription(_ number: Double) -> String {
-//        if let strNumber=formatter.string(from: NSNumber(value: number)) {
-//            return strNumber
-//        }
-//        return "0"
-//    }
 }
