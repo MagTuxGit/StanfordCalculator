@@ -153,7 +153,7 @@ struct CalcBrains {
     // MARK: Variables section
     var variableNames: Dictionary<String, Double> = [:]
     
-    mutating func setOperandWithVariable(_ variableName: String) {
+    mutating func setOperand(variableName: String) {
         if let variableValue = variableNames[variableName] {
             setOperand(variableValue)
         } else {
@@ -161,9 +161,33 @@ struct CalcBrains {
         }
     }
     
+    private func evaluate(using variables: Dictionary<String,Double>? = nil) -> (result: Double?, isPending: Bool, description: String) {
+        /*
+        4. Now that you allow variables to be entered as operands, add a method to evaluate the CalculatorBrain (i.e. calculate its result) by substituting values for those variables found in a supplied Dictionary ...
+        func evaluate(using variables: Dictionary<String,Double>? = nil)
+            -> (result: Double?, isPending: Bool, description: String)
+        Note that this takes an Optional Dictionary (with Strings as keys and Doubles as values) as its argument and that that argument defaults to nil if not supplied when this method is called. Also note that it returns a tuple (the first element of which is an Optional Double). This method is not mutating and you are not allowed to make it so. If a variable that has been set as an operand is not found in the Dictionary, assume its value is zero.    
+         
+        5. We made the result, description and resultIsPending vars non-private API in Assignment 1. That means we signed up to continue to support them even though we are now adding a new feature (variables) in this assignment which sort of makes them irrelevant. Really what we want to do is deprecate these (you’ll see all sorts of deprecated iOS API in Xcode), but for now we will keep the old result, description and resultIsPending vars around and just implement each of them by calling evaluate with the argument nil (i.e. they will give their answer assuming the value of any variables is zero). However, do not use any of these vars anywhere in your code inthisassignment. Useevaluateinstead.
+        */
+
+        // i don't really understand what i have to do
+        // i guess i should replace all uses of result, description and resultIsPending by evaluate()
+        return (result: 0, isPending: false, description: " ")
+    }
+
     // MARK: Program section
-    private var internalProgram = [Any]()
-    typealias PropertyList = Any    // AnyObject doesn't work
+    /*
+    enum programItem {
+        case operand(Double)
+        case operation(String)
+    }
+    typealias PropertyList = [programItem]
+    private var internalProgram = PropertyList()
+    */
+    
+    typealias PropertyList = [Any]
+    private var internalProgram = PropertyList()
     
     var program: PropertyList {
         get {
@@ -171,18 +195,18 @@ struct CalcBrains {
         }
         set {
             clear()
-            if let arrayOfOps = newValue as? [Any] {
-                for op in arrayOfOps {
-                    if let operand = op as? Double {
-                        setOperand(operand)
-                    } else if let operation = op as? String {
-                        performOperation(operation)
-                    }
+            //if let arrayOfOps = newValue as? PropertyList {
+            let arrayOfOps = newValue
+            for op in arrayOfOps {
+                if let operand = op as? Double {
+                    setOperand(operand)
+                } else if let operation = op as? String {
+                    performOperation(operation)
                 }
             }
         }
     }
-
+    
     // MARK: Description section
     private var currentPrecedence = Int.max
     private var descriptionAccumulator = " " {

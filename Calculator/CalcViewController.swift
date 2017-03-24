@@ -100,6 +100,7 @@ class CalcViewController: UIViewController {
             brain.program = savedProgram!
             if let result = brain.result {
                 displayValue = result
+                setHistory()
             }
         }
     }
