@@ -44,6 +44,10 @@ struct CalcBrains {
         program.removeAll()
     }
 
+    mutating func undo() {
+        program.removeLast()
+    }
+
     // MARK: Deprecated public interface
     var result: Double? {
         return evaluate().result

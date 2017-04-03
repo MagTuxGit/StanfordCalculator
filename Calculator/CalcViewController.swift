@@ -116,7 +116,14 @@ class CalcViewController: UIViewController {
 //    }
     
     @IBAction private func backspace(_ sender: UIButton) {
-        if !isInTheMiddleOfTheTyping { return }     // don't use backspace on results or constants
+        if !isInTheMiddleOfTheTyping {
+            brain.undo()
+            if let result = brain.evaluate(using: variableNames).result {
+                displayValue = result
+            }
+            setHistory()
+            return
+        }
         
         var text = display.text!
         text.remove(at: text.index(before: text.endIndex))
@@ -129,6 +136,7 @@ class CalcViewController: UIViewController {
         history.text = "..."
         isInTheMiddleOfTheTyping = false
         brain.clear()
+        variableNames.removeAll()
     }
 
     private var variableNames: Dictionary<String, Double> = [:]
