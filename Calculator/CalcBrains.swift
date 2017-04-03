@@ -139,6 +139,7 @@ struct CalcBrains {
         }
         
         func setOperand (variableName: String) {
+            descriptionAccumulator = variableName
             if let variableValue = variables?[variableName] {
                 setOperand(variableValue)
             } else {

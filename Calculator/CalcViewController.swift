@@ -12,6 +12,7 @@ class CalcViewController: UIViewController {
     
     @IBOutlet private weak var display: UILabel!
     @IBOutlet private weak var history: UILabel!
+    @IBOutlet private weak var memory: UILabel!
     
     // buttons outlets for text manipulations
     @IBOutlet private weak var btnRand: UIButton!
@@ -23,14 +24,15 @@ class CalcViewController: UIViewController {
     override func viewDidLoad() {
         display.layer.borderWidth = 1.0
         btnRand.titleLabel!.adjustsFontSizeToFitWidth = true
+        setMemory()
     }
     
     @IBAction private func touchDigit(_ sender: UIButton) {
         // clear state when new expression starts
-        if !brain.resultIsPending && !isInTheMiddleOfTheTyping {
-            brain.clear()
-            history.text = "..."
-        }
+//        if !brain.resultIsPending && !isInTheMiddleOfTheTyping {
+//            brain.clear()
+//            history.text = "..."
+//        }
 
         let digit = sender.currentTitle!
 
@@ -62,11 +64,14 @@ class CalcViewController: UIViewController {
     //private var savedProgram: CalcBrains.PropertyList?
     
     @IBAction private func performOperation(_ sender: UIButton) {
-        brain.setOperand(displayValue)
+        if isInTheMiddleOfTheTyping {
+            brain.setOperand(displayValue)
+        }
         isInTheMiddleOfTheTyping = false
         if let operationSymbol = sender.currentTitle {
             brain.performOperation(operationSymbol)
-            if let result = brain.result {
+            //if let result = brain.result {
+            if let result = brain.evaluate(using: variableNames).result {
                 displayValue = result
             }
 
@@ -83,7 +88,16 @@ class CalcViewController: UIViewController {
     }
     
     private func setHistory() {
-        history.text = brain.description + (brain.resultIsPending || brain.description.isEmpty ? "..." : "=")
+        history.text = brain.description + (brain.resultIsPending || brain.description == " " ? "..." : "=")
+    }
+    
+    private func setMemory() {
+        memory.text = "M = "
+        if let variableValue = variableNames["M"] {
+            memory.text! += formatter.string(from: NSNumber(value: variableValue)) ?? ""
+        } else {
+            memory.text! += "0"
+        }
     }
     
     // MARK: Additional buttons actions
@@ -120,10 +134,21 @@ class CalcViewController: UIViewController {
     private var variableNames: Dictionary<String, Double> = [:]
 
     @IBAction private func popM(_ sender: UIButton) {
-        
+        brain.setOperand(variableName: "M")
+        isInTheMiddleOfTheTyping = false
+        if let result = brain.evaluate(using: variableNames).result {
+            displayValue = result
+        }
+        setHistory()
     }
     
     @IBAction private func pushM(_ sender: UIButton) {
+        variableNames["M"] = displayValue
+        isInTheMiddleOfTheTyping = false
+        if let result = brain.evaluate(using: variableNames).result {
+            displayValue = result
+        }
+        setHistory()
+        setMemory()
     }
-    
 }
