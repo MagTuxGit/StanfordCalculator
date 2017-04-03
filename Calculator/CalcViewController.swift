@@ -15,18 +15,14 @@ class CalcViewController: UIViewController {
     
     // buttons outlets for text manipulations
     @IBOutlet private weak var btnRand: UIButton!
-    @IBOutlet private weak var btnRest: UIButton!
-    @IBOutlet private weak var btnSave: UIButton!
     
     private var isInTheMiddleOfTheTyping = false
     
-    let formatter = DefaultNumberFormatter()
+    private let formatter = DefaultNumberFormatter()
     
     override func viewDidLoad() {
         display.layer.borderWidth = 1.0
         btnRand.titleLabel!.adjustsFontSizeToFitWidth = true
-        btnRest.titleLabel!.adjustsFontSizeToFitWidth = true
-        btnSave.titleLabel!.adjustsFontSizeToFitWidth = true
     }
     
     @IBAction private func touchDigit(_ sender: UIButton) {
@@ -63,7 +59,7 @@ class CalcViewController: UIViewController {
     
     private var brain = CalcBrains()
     
-    private var savedProgram: CalcBrains.PropertyList?
+    //private var savedProgram: CalcBrains.PropertyList?
     
     @IBAction private func performOperation(_ sender: UIButton) {
         brain.setOperand(displayValue)
@@ -91,22 +87,23 @@ class CalcViewController: UIViewController {
     }
     
     // MARK: Additional buttons actions
-    @IBAction private func save() {
-        savedProgram = brain.program
-    }
-    
-    @IBAction private func restore() {
-        if savedProgram != nil {
-            brain.program = savedProgram!
-            if let result = brain.result {
-                displayValue = result
-                setHistory()
-            }
-        }
-    }
+//    @IBAction private func save() {
+//        savedProgram = brain.program
+//    }
+//    
+//    @IBAction private func restore() {
+//        if savedProgram != nil {
+//            brain.program = savedProgram!
+//            if let result = brain.result {
+//                displayValue = result
+//                setHistory()
+//            }
+//        }
+//    }
     
     @IBAction private func backspace(_ sender: UIButton) {
         if !isInTheMiddleOfTheTyping { return }     // don't use backspace on results or constants
+        
         var text = display.text!
         text.remove(at: text.index(before: text.endIndex))
         if text.isEmpty || (text == "-") { text = "0" }
@@ -120,10 +117,13 @@ class CalcViewController: UIViewController {
         brain.clear()
     }
 
-    @IBAction func popM(_ sender: UIButton) {
+    private var variableNames: Dictionary<String, Double> = [:]
+
+    @IBAction private func popM(_ sender: UIButton) {
+        
     }
     
-    @IBAction func pushM(_ sender: UIButton) {
+    @IBAction private func pushM(_ sender: UIButton) {
     }
     
 }
