@@ -16,7 +16,7 @@ func factorial(_ op1: Double) -> Double {
     return op1 * factorial(op1 - 1.0)
 }
 
-struct CalcBrains {
+struct CalcBrains: CustomStringConvertible {    // "\(brain)" works
 
     // MARK: Program
     private enum programItem {
