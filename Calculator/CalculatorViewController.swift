@@ -8,25 +8,52 @@
 
 import UIKit
 
-class CalculatorViewController: UIViewController {
+class CalculatorViewController: UIViewController, UISplitViewControllerDelegate {
     
+    // MARK: outlets and vars
     @IBOutlet private weak var display: UILabel!
     @IBOutlet private weak var history: UILabel!
     @IBOutlet private weak var memory: UILabel!
-    
-    // buttons outlets for text manipulations
     @IBOutlet private weak var btnRand: UIButton!
     
     private var isInTheMiddleOfTheTyping = false
     
     private let formatter = DefaultNumberFormatter()
     
+    // MARK: predefined
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.splitViewController?.delegate = self
+    }
+
     override func viewDidLoad() {
         display.layer.borderWidth = 1.0
         btnRand.titleLabel!.adjustsFontSizeToFitWidth = true
         setMemory()
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destinationVC = segue.destination.contents
+        if let graphVC = destinationVC as? GraphViewController {
+            // set GraphViewController API
+            graphVC.graphFunction = "x²"
+            graphVC.navigationItem.title = graphVC.graphFunction
+        }
+    }
+    
+    func splitViewController(_ splitViewController: UISplitViewController,
+                             collapseSecondary secondaryViewController: UIViewController,
+                             onto primaryViewController: UIViewController) -> Bool {
+        if primaryViewController.contents == self {
+            if let graphVC = secondaryViewController.contents as? GraphViewController, graphVC.graphFunction == nil {
+                // I say I want to collapse it but I don't do it really, so no collapse happens
+                return true
+            }
+        }
+        return false
+    }
+
+    // MARK: Calculator actions
     @IBAction private func touchDigit(_ sender: UIButton) {
         // clear state when new expression starts
 //        if !brain.resultIsPending && !isInTheMiddleOfTheTyping {
@@ -158,5 +185,14 @@ class CalculatorViewController: UIViewController {
         }
         setHistory()
         setMemory()
+    }
+}
+
+extension UIViewController {
+    var contents: UIViewController {
+        if let navigationVC = self as? UINavigationController {
+            return navigationVC.visibleViewController ?? self
+        }
+        return self
     }
 }
