@@ -1,5 +1,5 @@
 //
-//  CalcViewController.swift
+//  CalculatorViewController.swift
 //  Calculator
 //
 //  Created by Andrij Trubchanin on 12/12/16.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CalcViewController: UIViewController {
+class CalculatorViewController: UIViewController {
     
     @IBOutlet private weak var display: UILabel!
     @IBOutlet private weak var history: UILabel!
