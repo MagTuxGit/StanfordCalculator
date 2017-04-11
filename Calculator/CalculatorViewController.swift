@@ -35,9 +35,13 @@ class CalculatorViewController: UIViewController, UISplitViewControllerDelegate 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destinationVC = segue.destination.contents
         if let graphVC = destinationVC as? GraphViewController {
-            // set GraphViewController API
-            graphVC.graphFunction = "x²"
-            graphVC.navigationItem.title = graphVC.graphFunction
+            if brain.resultIsPending {
+                return
+            }
+            graphVC.graphFunction = { [weak self] (x: Double) -> Double? in
+                return self?.brain.evaluate(using: ["M":x]).result
+            }
+            graphVC.navigationItem.title = history.text
         }
     }
     

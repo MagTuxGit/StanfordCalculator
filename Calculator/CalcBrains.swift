@@ -84,7 +84,7 @@ struct CalcBrains: CustomStringConvertible {    // "\(brain)" works
         "−" :   .binaryOperation(-, { $0 + " - " + $1 }, 0),
         "xʸ":   .binaryOperation(pow, { $0 + " ^ " + $1 }, 2),
         "=" :   .equals,
-        "Rand": .random({ Double(arc4random()) / Double(UINT32_MAX) }),
+        "🎲":   .random({ Double(arc4random()) / Double(UINT32_MAX) }),
         // not used
         "asin" : .unaryOperation(asin, { "asin(" + $0 + ")"}),
         "acos" : .unaryOperation(acos, { "acos(" + $0 + ")"}),

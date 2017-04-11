@@ -8,18 +8,24 @@
 
 import UIKit
 
-class GraphViewController: UIViewController {
+class GraphViewController: UIViewController, GraphViewDataSource {
     
-    var graphFunction: String? {
+    // Model
+    var graphFunction: ((Double) -> Double?)?
+    
+    // View
+    @IBOutlet weak var graphView: GraphView! {
         didSet {
-            updateUI()
+            graphView.dataSource = self
         }
     }
     
-    @IBOutlet weak var graphView: GraphView!
-    
-    private func updateUI() {
-        // set graphView API here
-        graphView?.graphFunction = graphFunction
+    // GraphViewDataSource
+    func getValueFor(point x: CGFloat) -> CGFloat? {
+        if let function = graphFunction,
+           let result = function(Double(x)) {
+            return CGFloat(result)
+        }
+        return nil
     }
 }
