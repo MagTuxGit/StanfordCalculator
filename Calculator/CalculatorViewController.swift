@@ -126,11 +126,11 @@ class CalculatorViewController: UIViewController, UISplitViewControllerDelegate 
     }
     
     private func setMemory() {
-        memory.text = "M = "
         if let variableValue = variableNames["M"] {
-            memory.text! += formatter.string(from: NSNumber(value: variableValue)) ?? ""
+            let mValue = formatter.string(from: NSNumber(value: variableValue)) ?? ""
+            memory.text! = "M = " + mValue
         } else {
-            memory.text! += "0"
+            memory.text! = "M isn't set"
         }
     }
     

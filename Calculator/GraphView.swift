@@ -26,6 +26,16 @@ class GraphView: UIView {
     var origin: CGPoint! { didSet { setNeedsDisplay() } }       // maybe CGPoint.zero ?
     var dataSource: GraphViewDataSource?
     
+    func changeScale(recognizer: UIPinchGestureRecognizer) {
+        switch recognizer.state {
+        case .changed, .ended:
+            scale *= recognizer.scale
+            recognizer.scale  = 1
+        default:
+            break
+        }
+    }
+    
     override func draw(_ rect: CGRect) {
         color.set()
         origin = origin ?? CGPoint(x: bounds.midX, y: bounds.midY)

@@ -17,6 +17,11 @@ class GraphViewController: UIViewController, GraphViewDataSource {
     @IBOutlet weak var graphView: GraphView! {
         didSet {
             graphView.dataSource = self
+            
+            graphView.addGestureRecognizer(UIPinchGestureRecognizer(
+                target: graphView,
+                action: #selector(GraphView.changeScale)
+            ))
         }
     }
     
