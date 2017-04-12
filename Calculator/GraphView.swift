@@ -29,6 +29,8 @@ class GraphView: UIView {
     func changeScale(recognizer: UIPinchGestureRecognizer) {
         switch recognizer.state {
         case .changed, .ended:
+            // every rescaling forces redrawing whole graph, place for optimization
+            // maybe should use a scaling step?
             scale *= recognizer.scale
             recognizer.scale  = 1
         default:
@@ -40,10 +42,14 @@ class GraphView: UIView {
         switch recognizer.state {
         case .changed, .ended:
             if let panRecognizer = recognizer as? UIPanGestureRecognizer {
+                // every translation forces redrawing whole graph, place for optimization
                 let translation = panRecognizer.translation(in: self)
-                origin.x += translation.x
-                origin.y += translation.y
-                panRecognizer.setTranslation(CGPoint.zero, in: self)
+                // trying to set some translation step. maybe should use velocity or something else
+                if abs(translation.x)+abs(translation.y) > 10 {
+                    origin.x += translation.x
+                    origin.y += translation.y
+                    panRecognizer.setTranslation(CGPoint.zero, in: self)
+                }
             }
             if let tapRecognizer = recognizer as? UITapGestureRecognizer {
                 origin = tapRecognizer.location(in: self)
