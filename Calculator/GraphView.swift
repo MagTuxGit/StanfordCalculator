@@ -104,6 +104,8 @@ class GraphView: UIView {
                 } else {
                     path.addLine(to: point)
                 }
+            } else {
+                pathIsEmpty = true
             }
         }
         path.lineWidth = lineWidth
