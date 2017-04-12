@@ -1,6 +1,8 @@
 # StanfordCalculator
 Project from course
+
 [Developing iOS 9 Apps with Swift](https://itunes.apple.com/ua/course/developing-ios-9-apps-swift/id1104579961)
+
 [Developing iOS 10 Apps with Swift](https://itunes.apple.com/ua/course/developing-ios-10-apps-with-swift/id1198467120)
 
 Done
