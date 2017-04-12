@@ -21,6 +21,7 @@ class GraphViewController: UIViewController, GraphViewDataSource {
     }
     
     // GraphViewDataSource
+    // return y for x
     func getValueFor(point x: CGFloat) -> CGFloat? {
         if let function = graphFunction,
            let result = function(Double(x)) {

@@ -8,15 +8,18 @@
 
 import UIKit
 
+// data source protocol
 protocol GraphViewDataSource {
     func getValueFor(point x: CGFloat) -> CGFloat?
 }
 
 class GraphView: UIView {
-    var color: UIColor = .blue { didSet { setNeedsDisplay() } }
-    var scale: CGFloat = 10 { didSet { setNeedsDisplay() } }
-    var origin: CGPoint? { didSet { setNeedsDisplay() } }       // maybe CGPoint.zero ?
+    // MARK: properties
+    var color: UIColor = .black { didSet { setNeedsDisplay() } }
     var lineWidth: CGFloat = 1 { didSet { setNeedsDisplay() } }
+
+    var scale: CGFloat = 50 { didSet { setNeedsDisplay() } }
+    var origin: CGPoint! { didSet { setNeedsDisplay() } }       // maybe CGPoint.zero ?
     
     var dataSource: GraphViewDataSource?
     
@@ -24,9 +27,11 @@ class GraphView: UIView {
         color.set()
         origin = origin ?? CGPoint(x: bounds.midX, y: bounds.midY)
         
+        // draw axes
         let axes = AxesDrawer()
-        axes.drawAxes(in: bounds, origin: origin!, pointsPerUnit: scale)
+        axes.drawAxes(in: bounds, origin: origin, pointsPerUnit: scale)
         
+        // draw graph
         if let data = dataSource {
             pathFor(data: data).stroke()
         }
@@ -38,19 +43,24 @@ class GraphView: UIView {
         var pathIsEmpty = true
         var point = CGPoint()
         
-        let width = Int(bounds.size.width * scale)
+        // iterate over every point across the width of the view
+        let width = Int(bounds.size.width)
         for pixel in 0...width {
-            point.x = CGFloat(pixel) / scale
+            point.x = CGFloat(pixel)
             
-            if let y = data.getValueFor(point: (point.x - origin!.x) / scale) {
+            // scale points to units
+            if let y = data.getValueFor(point: (point.x - origin.x) / scale) {
                 
+                // don't draw anything if value doesn't exist
                 if !y.isNormal && !y.isZero {
                     pathIsEmpty = true
                     continue
                 }
                 
-                point.y = origin!.y - y * scale
+                // scale units to points
+                point.y = origin.y - y * scale
                 
+                // just move if the previous point is not valid
                 if pathIsEmpty {
                     path.move(to: point)
                     pathIsEmpty = false
@@ -59,7 +69,6 @@ class GraphView: UIView {
                 }
             }
         }
-        
         path.lineWidth = lineWidth
         return path
     }

@@ -35,9 +35,11 @@ class CalculatorViewController: UIViewController, UISplitViewControllerDelegate 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destinationVC = segue.destination.contents
         if let graphVC = destinationVC as? GraphViewController {
-            if brain.resultIsPending {
+            // don't show any graph if the result is pending
+            if brain.evaluate(using: variableNames).isPending {
                 return
             }
+            // set graph model
             graphVC.graphFunction = { [weak self] (x: Double) -> Double? in
                 return self?.brain.evaluate(using: ["M":x]).result
             }
@@ -45,6 +47,7 @@ class CalculatorViewController: UIViewController, UISplitViewControllerDelegate 
         }
     }
     
+    // don't collapse the empty graph VC onto the calculator
     func splitViewController(_ splitViewController: UISplitViewController,
                              collapseSecondary secondaryViewController: UIViewController,
                              onto primaryViewController: UIViewController) -> Bool {
