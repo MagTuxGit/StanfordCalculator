@@ -62,4 +62,10 @@ class GraphViewController: UIViewController, GraphViewDataSource {
         defaults.set(graphView.origin.x, forKey: "graphOriginX")
         defaults.set(graphView.origin.y, forKey: "graphOriginY")
     }
+    
+    // maintain the origin of the graph with respect to the center of the graphing view
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        graphView.origin.x += size.width / 2 - graphView.bounds.midX
+        graphView.origin.y += size.height / 2 - graphView.bounds.midY
+    }
 }
