@@ -45,7 +45,9 @@ struct CalcBrains: CustomStringConvertible {    // "\(brain)" works
     }
 
     mutating func undo() {
-        program.removeLast()
+        if !program.isEmpty {
+            program.removeLast()
+        }
     }
 
     // MARK: Deprecated public interface

@@ -23,7 +23,7 @@ class CalculatorViewController: UIViewController, UISplitViewControllerDelegate 
     // MARK: predefined
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.splitViewController?.delegate = self
+        splitViewController?.delegate = self
     }
 
     override func viewDidLoad() {
@@ -69,7 +69,7 @@ class CalculatorViewController: UIViewController, UISplitViewControllerDelegate 
         }
         return false
     }
-
+    
     // MARK: Calculator actions
     @IBAction private func touchDigit(_ sender: UIButton) {
         // clear state when new expression starts
