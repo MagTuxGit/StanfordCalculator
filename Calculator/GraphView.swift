@@ -36,6 +36,17 @@ class GraphView: UIView {
         }
     }
     
+    func changeOrigin(recognizer: UIPanGestureRecognizer) {
+        switch recognizer.state {
+        case .changed, .ended:
+            let translation = recognizer.translation(in: self)
+            origin = CGPoint(x: origin.x + translation.x, y: origin.y + translation.y)
+            recognizer.setTranslation(CGPoint.zero, in: self)
+        default:
+            break
+        }
+    }
+    
     override func draw(_ rect: CGRect) {
         color.set()
         origin = origin ?? CGPoint(x: bounds.midX, y: bounds.midY)

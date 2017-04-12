@@ -22,6 +22,11 @@ class GraphViewController: UIViewController, GraphViewDataSource {
                 target: graphView,
                 action: #selector(GraphView.changeScale)
             ))
+            
+            graphView.addGestureRecognizer(UIPanGestureRecognizer(
+                target: graphView,
+                action: #selector(GraphView.changeOrigin)
+            ))
         }
     }
     
