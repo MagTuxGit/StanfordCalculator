@@ -27,6 +27,10 @@ class GraphViewController: UIViewController, GraphViewDataSource {
                 target: graphView,
                 action: #selector(GraphView.changeOrigin)
             ))
+
+            let recognizer = UITapGestureRecognizer(target: graphView, action: #selector(GraphView.changeOrigin))
+            recognizer.numberOfTapsRequired = 2
+            graphView.addGestureRecognizer(recognizer)
         }
     }
     

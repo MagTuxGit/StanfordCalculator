@@ -36,12 +36,17 @@ class GraphView: UIView {
         }
     }
     
-    func changeOrigin(recognizer: UIPanGestureRecognizer) {
+    func changeOrigin(recognizer: UIGestureRecognizer) {
         switch recognizer.state {
         case .changed, .ended:
-            let translation = recognizer.translation(in: self)
-            origin = CGPoint(x: origin.x + translation.x, y: origin.y + translation.y)
-            recognizer.setTranslation(CGPoint.zero, in: self)
+            if let panRecognizer = recognizer as? UIPanGestureRecognizer {
+                let translation = panRecognizer.translation(in: self)
+                origin = CGPoint(x: origin.x + translation.x, y: origin.y + translation.y)
+                panRecognizer.setTranslation(CGPoint.zero, in: self)
+            }
+            if let tapRecognizer = recognizer as? UITapGestureRecognizer {
+                origin = tapRecognizer.location(in: self)
+            }
         default:
             break
         }
