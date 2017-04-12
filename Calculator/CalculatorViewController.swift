@@ -36,14 +36,14 @@ class CalculatorViewController: UIViewController, UISplitViewControllerDelegate 
         let destinationVC = segue.destination.contents
         if let graphVC = destinationVC as? GraphViewController {
             // don't show any graph if the result is pending
-            if brain.evaluate(using: variableNames).isPending {
+            if brain.evaluate().isPending {
                 return
             }
             // set graph model
             graphVC.graphFunction = { [weak self] (x: Double) -> Double? in
                 return self?.brain.evaluate(using: ["M":x]).result
             }
-            graphVC.navigationItem.title = history.text
+            graphVC.navigationItem.title = brain.description
         }
     }
     
