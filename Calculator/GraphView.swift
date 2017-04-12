@@ -13,14 +13,17 @@ protocol GraphViewDataSource {
     func getValueFor(point x: CGFloat) -> CGFloat?
 }
 
+@IBDesignable
 class GraphView: UIView {
     // MARK: properties
+    @IBInspectable
     var color: UIColor = .black { didSet { setNeedsDisplay() } }
+    @IBInspectable
     var lineWidth: CGFloat = 1 { didSet { setNeedsDisplay() } }
-
+    @IBInspectable
     var scale: CGFloat = 50 { didSet { setNeedsDisplay() } }
+
     var origin: CGPoint! { didSet { setNeedsDisplay() } }       // maybe CGPoint.zero ?
-    
     var dataSource: GraphViewDataSource?
     
     override func draw(_ rect: CGRect) {
