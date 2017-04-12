@@ -523,6 +523,7 @@
                     <connections>
                         <outlet property="btnRand" destination="CE1-Cl-r86" id="2HD-zw-NTn"/>
                         <outlet property="display" destination="Ben-zZ-fjt" id="BTz-3v-Tz6"/>
+                        <outlet property="graphButton" destination="MUV-xW-TuW" id="mDA-wG-5s6"/>
                         <outlet property="history" destination="EQe-f1-Yil" id="XUw-vH-mgE"/>
                         <outlet property="memory" destination="dv1-zk-XtZ" id="CYA-tt-Qo5"/>
                     </connections>
@@ -544,7 +545,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="71Z-jl-odk" customClass="GraphView" customModule="Calculator" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="1045" height="1024"/>
+                                <rect key="frame" x="0.0" y="0.0" width="1044.5" height="1024"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="lineWidth">

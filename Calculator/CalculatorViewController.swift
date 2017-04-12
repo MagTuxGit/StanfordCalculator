@@ -15,6 +15,7 @@ class CalculatorViewController: UIViewController, UISplitViewControllerDelegate 
     @IBOutlet private weak var history: UILabel!
     @IBOutlet private weak var memory: UILabel!
     @IBOutlet private weak var btnRand: UIButton!
+    @IBOutlet private weak var graphButton: UIButton!
     
     private var isInTheMiddleOfTheTyping = false
     
@@ -139,6 +140,16 @@ class CalculatorViewController: UIViewController, UISplitViewControllerDelegate 
             memory.text! = "M = " + mValue
         } else {
             memory.text! = "M isn't set"
+        }
+        
+        let brainState = brain.evaluate()
+        // label text is not working. why?
+        if brainState.isPending || brainState.result == nil {
+            graphButton.isEnabled = false
+            //graphButton.titleLabel?.text = "📉"
+        } else {
+            graphButton.isEnabled = true
+            //graphButton.titleLabel?.text = "📈"
         }
     }
     
