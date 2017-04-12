@@ -41,7 +41,8 @@ class GraphView: UIView {
         case .changed, .ended:
             if let panRecognizer = recognizer as? UIPanGestureRecognizer {
                 let translation = panRecognizer.translation(in: self)
-                origin = CGPoint(x: origin.x + translation.x, y: origin.y + translation.y)
+                origin.x += translation.x
+                origin.y += translation.y
                 panRecognizer.setTranslation(CGPoint.zero, in: self)
             }
             if let tapRecognizer = recognizer as? UITapGestureRecognizer {
@@ -53,6 +54,7 @@ class GraphView: UIView {
     }
     
     override func draw(_ rect: CGRect) {
+        //contentScaleFactor = 1
         color.set()
         origin = origin ?? CGPoint(x: bounds.midX, y: bounds.midY)
         

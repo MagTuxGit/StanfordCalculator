@@ -123,7 +123,8 @@ struct CalcBrains: CustomStringConvertible {    // "\(brain)" works
                 return descriptionAccumulator
             } else {
                 return pendingBinaryOperation!.descriptionFunction(pendingBinaryOperation!.descriptionOperand,
-                                                                   pendingBinaryOperation!.descriptionOperand != descriptionAccumulator ? descriptionAccumulator : "")
+                    //pendingBinaryOperation!.descriptionOperand != descriptionAccumulator ? descriptionAccumulator : "")
+                    descriptionAccumulator == " " ? "" : descriptionAccumulator)
             }
         }
 

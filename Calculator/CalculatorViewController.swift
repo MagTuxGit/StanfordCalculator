@@ -29,7 +29,17 @@ class CalculatorViewController: UIViewController, UISplitViewControllerDelegate 
     override func viewDidLoad() {
         display.layer.borderWidth = 1.0
         btnRand.titleLabel!.adjustsFontSizeToFitWidth = true
-        setMemory()
+        updateUI()
+    }
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        // don't show any graph if the result is pending
+        if identifier == "showGraph" {
+            if brain.evaluate().isPending || brain.evaluate().result == nil {
+                return false
+            }
+        }
+        return true
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -118,14 +128,12 @@ class CalculatorViewController: UIViewController, UISplitViewControllerDelegate 
              }
              */
         }
-        setHistory()
+        updateUI()
     }
     
-    private func setHistory() {
+    private func updateUI() {
         history.text = brain.description + (brain.resultIsPending || brain.description == " " ? "..." : "=")
-    }
-    
-    private func setMemory() {
+        
         if let variableValue = variableNames["M"] {
             let mValue = formatter.string(from: NSNumber(value: variableValue)) ?? ""
             memory.text! = "M = " + mValue
@@ -155,7 +163,7 @@ class CalculatorViewController: UIViewController, UISplitViewControllerDelegate 
             if let result = brain.evaluate(using: variableNames).result {
                 displayValue = result
             }
-            setHistory()
+            updateUI()
             return
         }
         
@@ -171,6 +179,7 @@ class CalculatorViewController: UIViewController, UISplitViewControllerDelegate 
         isInTheMiddleOfTheTyping = false
         brain.clear()
         variableNames.removeAll()
+        updateUI()
     }
 
     private var variableNames: Dictionary<String, Double> = [:]
@@ -181,7 +190,7 @@ class CalculatorViewController: UIViewController, UISplitViewControllerDelegate 
         if let result = brain.evaluate(using: variableNames).result {
             displayValue = result
         }
-        setHistory()
+        updateUI()
     }
     
     @IBAction private func pushM(_ sender: UIButton) {
@@ -190,8 +199,7 @@ class CalculatorViewController: UIViewController, UISplitViewControllerDelegate 
         if let result = brain.evaluate(using: variableNames).result {
             displayValue = result
         }
-        setHistory()
-        setMemory()
+        updateUI()
     }
 }
 
