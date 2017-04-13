@@ -45,7 +45,7 @@ class GraphView: UIView {
                 // every translation forces redrawing whole graph, place for optimization
                 let translation = panRecognizer.translation(in: self)
                 // trying to set some translation step. maybe should use velocity or something else
-                if abs(translation.x)+abs(translation.y) > 10 {
+                if abs(translation.x)+abs(translation.y) > 10 || recognizer.state == .ended {
                     origin.x += translation.x
                     origin.y += translation.y
                     panRecognizer.setTranslation(CGPoint.zero, in: self)
